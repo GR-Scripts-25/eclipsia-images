@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eclipsia Images</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Eclipsia Image Hosting</h1>
+    <p>Click an image to copy its URL</p>
+  </header>
+
+  <main>
+
+    <!-- ASSETS -->
+    <section id="assets">
+      <h2>Assets</h2>
+      <div class="grid" id="assets-grid">
+        <!-- Drop images in images/assets/ and add them here -->
+        <p class="empty">No assets yet.</p>
+      </div>
+    </section>
+
+    <!-- VIP VEHICLES -->
+    <section id="vehicles">
+      <h2>VIP Vehicles</h2>
+      <div class="grid" id="vehicles-grid">
+        <!-- Drop images in images/vip vehicles/ and add them here -->
+        <p class="empty">No vehicles yet.</p>
+      </div>
+    </section>
+
+    <!-- VIP WEAPONS -->
+    <section id="weapons">
+      <h2>VIP Weapons</h2>
+      <div class="grid" id="weapons-grid">
+        <p class="empty loading">Loading...</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast">URL copied!</div>
+
+  <script>
+    // Auto-detect from GitHub Pages URL (username.github.io/repo)
+    const GITHUB_USER = window.location.hostname.split('.')[0];
+    const GITHUB_REPO = window.location.pathname.split('/').filter(Boolean)[0] || 'eclipsia-images';
+    const BRANCH      = 'main';
+
+    const IMAGE_EXT = /\.(png|jpg|jpeg|gif|webp|svg)$/i;
+    const RAW_BASE  = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/`;
+    const API_BASE  = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/`;
+
+    const SECTIONS = [
+      { folder: 'images/assets',       gridId: 'assets-grid'   },
+      { folder: 'images/vip vehicles', gridId: 'vehicles-grid' },
+      { folder: 'images/vip weapons',  gridId: 'weapons-grid'  },
+    ];
+
+    async function loadSection({ folder, gridId }) {
+      const grid = document.getElementById(gridId);
+      try {
+        const res  = await fetch(API_BASE + encodeURIComponent(folder).replace(/%2F/g, '/'));
+        const files = await res.json();
+        const images = files.filter(f => f.type === 'file' && IMAGE_EXT.test(f.name));
+
+        grid.innerHTML = '';
+
+        if (images.length === 0) {
+          grid.innerHTML = '<p class="empty">No images yet.</p>';
+          return;
+        }
+
+        images.forEach(file => {
+          const imgUrl = RAW_BASE + folder + '/' + file.name;
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `<img src="${imgUrl}" alt="${file.name}" /><span>${file.name.replace(/\.[^.]+$/, '')}</span>`;
+          card.addEventListener('click', () => {
+            navigator.clipboard.writeText(imgUrl).then(() => {
+              const toast = document.getElementById('toast');
+              toast.classList.add('show');
+              setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+          });
+          grid.appendChild(card);
+        });
+      } catch (e) {
+        grid.innerHTML = '<p class="empty">Could not load images. Make sure GITHUB_USER is set correctly.</p>';
+      }
+    }
+
+    SECTIONS.forEach(loadSection);
+  </script>
+
+</body>
+</html>

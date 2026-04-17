@@ -1,0 +1,126 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0f0f13;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+
+header {
+  background: #1a1a24;
+  border-bottom: 2px solid #6c3fff;
+  padding: 24px 40px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #a78bfa;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+header p {
+  margin-top: 6px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+section h2 {
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #a78bfa;
+  border-left: 4px solid #6c3fff;
+  padding-left: 12px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.card {
+  background: #1a1a24;
+  border: 1px solid #2a2a38;
+  border-radius: 10px;
+  padding: 12px;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  user-select: none;
+}
+
+.card:hover {
+  border-color: #6c3fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(108, 63, 255, 0.25);
+}
+
+.card:active {
+  transform: translateY(0);
+}
+
+.card img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.card span {
+  font-size: 0.65rem;
+  color: #888;
+  text-align: center;
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.empty {
+  color: #444;
+  font-size: 0.9rem;
+  font-style: italic;
+  padding: 8px 0;
+}
+
+/* Toast notification */
+#toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #6c3fff;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 100;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
