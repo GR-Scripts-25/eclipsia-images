@@ -11,6 +11,9 @@
   <header>
     <h1>Eclipsia Image Hosting</h1>
     <p>Click an image to copy its URL</p>
+    <div class="search-wrapper">
+      <input type="text" id="search" placeholder="Search images..." autocomplete="off" />
+    </div>
   </header>
 
   <main>
@@ -95,6 +98,14 @@
     }
 
     SECTIONS.forEach(loadSection);
+
+    document.getElementById('search').addEventListener('input', function () {
+      const query = this.value.trim().toLowerCase();
+      document.querySelectorAll('.card').forEach(card => {
+        const name = card.querySelector('span').textContent.toLowerCase();
+        card.style.display = name.includes(query) ? '' : 'none';
+      });
+    });
   </script>
 
 </body>
